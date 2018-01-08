@@ -1,7 +1,12 @@
 #!/bin/bash
 
-docker run --rm -v "$(pwd)/node_modules":/node_modules \
+BASE_DIR="$(pwd)/$(dirname $0)/.."
+
+docker run --rm \
+    -v $BASE_DIR:/chrometrace-sitespeedio-plugin \
+    -v $BASE_DIR/sitespeed-result/:/sitespeed.io/sitespeed-result \
     sitespeedio/sitespeed.io \
-    --plugins.load /node_modules/chrometrace-sitespeedio-plugin \
+    -n 1 \
+    --plugins.add /chrometrace-sitespeedio-plugin \
     --browsertime.chrome.collectTracingEvents \
     https://mobile.twitter.com/sitespeedio
