@@ -1,13 +1,13 @@
-const messageMaker = require("sitespeed.io/lib/support/messageMaker");
-const analyzer = require("./src/analyzer");
-const aggregator = require("./src/aggregator");
-const fs = require("fs");
-const path = require("path");
+const messageMaker = require('sitespeed.io/lib/support/messageMaker');
+const analyzer = require('./src/analyzer');
+const aggregator = require('./src/aggregator');
+const fs = require('fs');
+const path = require('path');
 
 // We need to prefix the plugin name with 'browsertime' to force
 // lib/plugins/graphite to add connectivity
 // https://github.com/sitespeedio/sitespeed.io/blob/master/lib/plugins/graphite/data-generator.js#L12
-const pluginName = "browsertimeChrometrace";
+const pluginName = 'browsertimeChrometrace';
 const make = messageMaker(pluginName).make;
 
 let runIndex = {};
@@ -18,7 +18,7 @@ function processChrometraceMessage(message, queue, statsHelpers, options) {
 
   aggregator.addToAggregate(results, url, statsHelpers);
 
-  if (typeof runIndex[url] === "undefined") {
+  if (typeof runIndex[url] === 'undefined') {
     runIndex[url] = 0;
   }
 
@@ -64,31 +64,31 @@ module.exports = {
     this.options.iterations = options.browsertime.iterations;
     this.statsHelpers = context.statsHelpers;
     this.pug = fs.readFileSync(
-      path.resolve(__dirname, "src", "pug", "index.pug"),
-      "utf8"
+      path.resolve(__dirname, 'src', 'pug', 'index.pug'),
+      'utf8'
     );
   },
 
   processMessage(message, queue) {
-    if (message.type === "sitespeedio.setup") {
+    if (message.type === 'sitespeedio.setup') {
       queue.postMessage(
-        make("html.pug", {
+        make('html.pug', {
           id: pluginName,
-          name: "Chrome trace",
+          name: 'Chrome trace',
           pug: this.pug,
-          type: "run"
+          type: 'run'
         })
       );
       queue.postMessage(
-        make("html.pug", {
+        make('html.pug', {
           id: pluginName,
-          name: "Chrome trace",
+          name: 'Chrome trace',
           pug: this.pug,
-          type: "pageSummary"
+          type: 'pageSummary'
         })
       );
       return;
-    } else if (message.type !== "browsertime.chrometrace") {
+    } else if (message.type !== 'browsertime.chrometrace') {
       return;
     }
 
